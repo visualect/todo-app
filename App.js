@@ -1,8 +1,7 @@
-export default class App {
+export default class TodoApp {
     constructor(root, users) {
         this.root = root;
         this.users = users;
-        this.loadCSS('./App.css');
     };
 
     loadCSS(path) {
@@ -14,11 +13,13 @@ export default class App {
         document.head.append(link);
     }
 
-    render() {
+    renderApp() {
+        this.loadCSS('./App.css')
         const root = document.querySelector(`${this.root}`)
         root.innerHTML = '';
         const container = document.createElement('div');
         const users = document.createElement('ul');
+
         for (const user of this.users) {
             const userItem = document.createElement('li');
             const userLink = document.createElement('a');
@@ -28,9 +29,9 @@ export default class App {
             users.append(userItem)
             userLink.addEventListener('click', event => {
                 event.preventDefault();
-                history.pushState({}, '', userLink.href);
-                const todoPage = new TodoPage(this.root, user, this.users);
-                todoPage.render();
+                history.pushState(null, null, userLink.href);
+                const todoPage = new TodoPage(this.root, this.users, user);
+                todoPage.renderPage(user);
             });
 
             container.classList.add('container');
@@ -44,23 +45,22 @@ export default class App {
     };
 };
 
-class TodoPage extends App {
-    constructor(root, user, users) {
-        super();
-        this.user = user;
+class TodoPage extends TodoApp {
+    constructor(root, users, user) {
+        super(root, users);
         this.root = root;
         this.users = users;
-        super.loadCSS('./MainPage.css');
+        this.user = user
     }
 
-    render() {
+    renderPage() {
+        super.loadCSS('./MainPage.css');
         const root = document.querySelector(`${this.root}`)
         root.innerHTML = '';
-
         const container = document.createElement('div');
         const header = document.createElement('header');
         const nav = document.createElement('nav');
-        const p = document.createElement('p');
+        const username = document.createElement('p');
         const span = document.createElement('span');
         const changeProfileBtn = document.createElement('button');
         const form = document.createElement('form');
@@ -70,27 +70,27 @@ class TodoPage extends App {
         const todoList = document.createElement('ul');
 
         button.textContent = 'Add';
-        input.placeholder = 'Add...';
+        input.placeholder = 'What needs to be done?';
         span.textContent = 'To do /';
-        p.textContent = `${this.user}`;
+        username.textContent = this.user
         changeProfileBtn.textContent = 'Change profile';
 
         form.addEventListener('submit', event => {
             event.preventDefault();
             if (!input.value) return;
-            const item = new TodoItem(input.value);
-            const todoItem = item.createItem();
+            const todoItem = TodoItem.createItem(input.value);
+            input.value = '';
             todoList.append(todoItem);
         });
 
         changeProfileBtn.addEventListener('click', event => {
             event.preventDefault();
-            history.pushState({}, '', '/');
-            const app = new App(this.root, this.users);
-            app.render();
+            history.back();
+            const app = new TodoApp(this.root, this.users);
+            app.renderApp();
         })
 
-        p.classList.add('current-user')
+        username.classList.add('current-user')
         span.classList.add('current-user-prefix');
         changeProfileBtn.classList.add('change-profile-btn');
         nav.classList.add('header__nav');
@@ -100,9 +100,10 @@ class TodoPage extends App {
         inputWrapper.classList.add('input-wrapper');
         input.classList.add('input');
         button.classList.add('button');
+        todoList.classList.add('todo-list')
 
-        p.prepend(span);
-        nav.append(p);
+        username.prepend(span);
+        nav.append(username);
         nav.append(changeProfileBtn);
         container.append(header);
         header.append(nav);
@@ -111,31 +112,48 @@ class TodoPage extends App {
         form.append(inputWrapper);
         container.append(form);
         container.append(todoList);
+
         root.append(container)
     };
 }
 
 class TodoItem extends TodoPage {
-    done = false;
-    constructor(todo) {
-        this.todo = todo;
-    };
 
-    createItem() {
+    static createItem(todo) {
         const item = document.createElement('li');
         const itemText = document.createElement('div');
         const buttonWrapper = document.createElement('div');
         const doneBtn = document.createElement('button');
         const deleteBtn = document.createElement('button');
 
-        item.textContent = this.todo;
+        doneBtn.textContent = 'Done';
+        deleteBtn.textContent = 'Delete';
+        itemText.textContent = todo;
+
+        doneBtn.addEventListener('click', () => {
+            if (!item.classList.contains('done-state')) {
+                item.classList.add('done-state');
+            } else {
+                item.classList.remove('done-state');
+            };
+        });
+
+        deleteBtn.addEventListener('click', () => {
+
+        });
 
         item.classList.add('todo-item');
+        itemText.classList.add('todo-text')
+        buttonWrapper.classList.add('button-wrapper');
+        doneBtn.classList.add('done-btn');
+        deleteBtn.classList.add('delete-btn');
 
         item.append(itemText);
         item.append(buttonWrapper);
         buttonWrapper.append(doneBtn);
         buttonWrapper.append(deleteBtn);
+
+        setTimeout(() => item.classList.add('show'), 0);
 
         return item;
     }
