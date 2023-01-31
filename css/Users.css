@@ -1,0 +1,115 @@
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter-Black.woff2') format('woff2');
+    font-display: swap;
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter-ExtraBold.woff2') format('woff2');
+    font-display: swap;
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter-Bold.woff2') format('woff2');
+    font-display: swap;
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter-SemiBold.woff2') format('woff2');
+    font-display: swap;
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter-Medium.woff2') format('woff2');
+    font-display: swap;
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter-Regular.woff2') format('woff2');
+    font-display: swap;
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter-LightBETA.woff2') format('woff2');
+    font-display: swap;
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter-ExtraLightBETA.woff2') format('woff2');
+    font-display: swap;
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter-ThinBETA.woff2') format('woff2');
+    font-display: swap;
+    font-weight: 100;
+    font-style: normal;
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --color: #111827;
+    --color-link: rgb(75, 85, 99);
+    --color-background: #FCFCFC;
+}
+
+body {
+    background-color: var(--color-background);
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1000px;
+    height: 100vh;
+    margin: 0 auto;
+}
+
+.users {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+}
+
+.users__link {
+    font-size: 24px;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    font-weight: 500;
+    color: var(--color-link);
+    text-decoration: underline var(--color-link) 1px;
+    text-underline-position: under;
+    transition: opacity .2s ease-out;
+}
+
+.users__link:hover {
+    opacity: .7;
+}
