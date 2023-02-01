@@ -1,8 +1,8 @@
 import render from './App.js';
 
 export function create() {
-    const params = new URLSearchParams(location.search);
     const container = document.createElement('div');
+    const params = new URLSearchParams(location.search);
     const header = document.createElement('header');
     const nav = document.createElement('nav');
     const username = document.createElement('p');
@@ -13,39 +13,12 @@ export function create() {
     const input = document.createElement('input');
     const button = document.createElement('button');
     const todoList = document.createElement('ul');
-    const modal = document.createElement('div');
-    const modalWindow = document.createElement('div');
-    const modalQuestion = document.createElement('div');
-    const modalBtnWrapper = document.createElement('div');
-    const modalBtnYes = document.createElement('button');
-    const modalBtnNo = document.createElement('button');
 
     button.textContent = 'Add';
     input.placeholder = 'What needs to be done?';
     span.textContent = 'To do /';
     username.textContent = params.get('user');
     changeProfileBtn.textContent = 'Change profile';
-    modalQuestion.textContent = 'Are you sure?'
-    modalBtnYes.textContent = 'Yes';
-    modalBtnNo.textContent = 'No';
-
-    modal.addEventListener('click', () => {
-        if (event.__withinWindow) return
-        modal.classList.remove('show-modal');
-    })
-
-    modalWindow.addEventListener('click', event => {
-        event.__withinWindow = true;
-    });
-
-    modalBtnNo.addEventListener('click', () => {
-        modal.classList.remove('show-modal');
-    });
-
-    modalBtnYes.addEventListener('click', event => {
-        modal.classList.remove('show-modal');
-        console.log(event);
-    });
 
     form.addEventListener('submit', event => {
         event.preventDefault();
@@ -53,13 +26,13 @@ export function create() {
         const todoItem = createItem(input.value);
         input.value = '';
         todoList.append(todoItem);
-        setTimeout(() => todoItem.classList.add('show'), 0);
+        setTimeout(() => todoItem.classList.add('show-item'), 0);
     });
 
     changeProfileBtn.addEventListener('click', event => {
         event.preventDefault();
         history.pushState(null, null, `${location.pathname}`);
-        render('./css/Users.css', './Users.js');
+        render('./Users.js');
     });
 
     username.classList.add('current-user')
@@ -67,25 +40,13 @@ export function create() {
     changeProfileBtn.classList.add('change-profile-btn');
     nav.classList.add('header__nav');
     header.classList.add('header');
-    container.classList.add('container');
+    container.classList.add('todo-container');
     form.classList.add('form');
     inputWrapper.classList.add('input-wrapper');
     input.classList.add('input');
     button.classList.add('button');
     todoList.classList.add('todo-list')
-    modal.classList.add('modal');
-    modalWindow.classList.add('modal-window');
-    modalQuestion.classList.add('modal-question');
-    modalBtnWrapper.classList.add('modal-btn-wrapper');
-    modalBtnYes.classList.add('modal-btn-yes', 'modal-btn');
-    modalBtnNo.classList.add('modal-btn-no', 'modal-btn');
 
-
-    modal.append(modalWindow);
-    modalWindow.append(modalQuestion);
-    modalWindow.append(modalBtnWrapper);
-    modalBtnWrapper.append(modalBtnYes);
-    modalBtnWrapper.append(modalBtnNo);
     username.prepend(span);
     nav.append(username);
     nav.append(changeProfileBtn);
@@ -96,7 +57,38 @@ export function create() {
     form.append(inputWrapper);
     container.append(form);
     container.append(todoList);
-    container.append(modal)
+
+    const modal = document.createElement('div');
+    const modalWindow = document.createElement('div');
+    const modalQuestion = document.createElement('div');
+    const modalBtnWrapper = document.createElement('div');
+    const modalBtnYes = document.createElement('button');
+    const modalBtnNo = document.createElement('button');
+    modal.classList.add('modal');
+    modalWindow.classList.add('modal-window');
+    modalQuestion.classList.add('modal-question');
+    modalBtnWrapper.classList.add('modal-btn-wrapper');
+    modalBtnYes.classList.add('modal-btn-yes', 'modal-btn');
+    modalBtnNo.classList.add('modal-btn-no', 'modal-btn');
+    modalQuestion.textContent = 'Are you sure?'
+    modalBtnYes.textContent = 'Yes';
+    modalBtnNo.textContent = 'No';
+    modal.append(modalWindow);
+    modalWindow.append(modalQuestion);
+    modalWindow.append(modalBtnWrapper);
+    modalBtnWrapper.append(modalBtnYes);
+    modalBtnWrapper.append(modalBtnNo);
+    container.append(modal);
+
+    // modal.addEventListener('click', event => {
+    //     if (event.__withinWindow) return;
+    //     modal.classList.remove('show-modal');
+    //     modal.classList.remove('modal-transition');
+    // });
+
+    // modalWindow.addEventListener('click', event => {
+    //     event.__withinWindow = true;
+    // });
 
     return container;
 };
@@ -117,13 +109,16 @@ function createItem(todo) {
         if (!item.classList.contains('done-state')) {
             item.classList.add('done-state');
         } else {
-            item.classList.remove('done-state');
+            item.classList.remove('done-state')
         };
     });
 
-    deleteBtn.addEventListener('click', () => {
+    deleteBtn.addEventListener('click', event => {
         const modal = document.querySelector('.modal');
         modal.classList.add('show-modal');
+        setTimeout(() => modal.classList.add('modal-transition'), 0);
+        confirmDelete(event.target.parentNode.parentNode)
+        // somehow remove only clicked item
     });
 
     item.classList.add('todo-item');
@@ -138,4 +133,21 @@ function createItem(todo) {
     buttonWrapper.append(deleteBtn);
 
     return item;
+};
+
+function confirmDelete(item) {
+    const modal = document.querySelector('.modal');
+    const noBtn = document.querySelector('.modal-btn-no');
+    const yesBtn = document.querySelector('.modal-btn-yes');
+
+    noBtn.addEventListener('click', () => {
+        modal.classList.remove('show-modal')
+        modal.classList.remove('modal-transition')
+    });
+
+    yesBtn.addEventListener('click', () => {
+        modal.classList.remove('show-modal')
+        modal.classList.remove('modal-transition')
+        item.remove()
+    });
 }

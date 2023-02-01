@@ -17,10 +17,10 @@ export function create() {
         userLink.addEventListener('click', event => {
             event.preventDefault();
             history.pushState(null, null, userLink.href);
-            render('./css/Todo.css', './Todo.js');
+            render('./Todo.js');
         });
     };
-    container.classList.add('container');
+    container.classList.add('users-container');
     usersList.classList.add('users');
     container.append(usersList);
     

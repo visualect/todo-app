@@ -70,6 +70,7 @@
     font-style: normal;
 }
 
+
 * {
     box-sizing: border-box;
 }
@@ -87,7 +88,69 @@ body {
     background-color: var(--color-background);
 }
 
-.container {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Users styles */
+
+.users-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1000px;
+    height: 100vh;
+    margin: 0 auto;
+}
+
+.users {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+}
+
+.users__link {
+    font-size: 24px;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    font-weight: 500;
+    color: var(--color-link);
+    text-decoration: underline var(--color-link) 1px;
+    text-underline-position: under;
+    transition: opacity .2s ease-out;
+}
+
+.users__link:hover {
+    opacity: .7;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Todo styles */
+
+.todo-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -211,7 +274,7 @@ body {
     margin-bottom: 20px;
 }
 
-.show {
+.show-item {
     opacity: 1;
     transform: translateY(0);
     transition: opacity, transform .2s ease-out;
@@ -275,6 +338,7 @@ body {
     justify-content: center;
     align-items: center;
     background-color: rgba(0, 0, 0, 0.19);
+    opacity: 0;
 }
 
 .modal-window {
@@ -320,5 +384,9 @@ body {
 
 .show-modal {
     display: flex;
-    transition: display .3s ease-in-out;
+}
+
+.modal-transition {
+    opacity: 1;
+    transition: opacity .3s ease-in-out;
 }
