@@ -46,7 +46,6 @@ export function create() {
         console.log(todos);
         todoList.append(todoItem);
         input.value = '';
-        setTimeout(() => todoItem.classList.add('show-item'), 0);
     });
 
     changeProfileBtn.addEventListener('click', event => {
