@@ -58,38 +58,6 @@ export function create() {
     container.append(form);
     container.append(todoList);
 
-    const modal = document.createElement('div');
-    const modalWindow = document.createElement('div');
-    const modalQuestion = document.createElement('div');
-    const modalBtnWrapper = document.createElement('div');
-    const modalBtnYes = document.createElement('button');
-    const modalBtnNo = document.createElement('button');
-    modal.classList.add('modal');
-    modalWindow.classList.add('modal-window');
-    modalQuestion.classList.add('modal-question');
-    modalBtnWrapper.classList.add('modal-btn-wrapper');
-    modalBtnYes.classList.add('modal-btn-yes', 'modal-btn');
-    modalBtnNo.classList.add('modal-btn-no', 'modal-btn');
-    modalQuestion.textContent = 'Are you sure?'
-    modalBtnYes.textContent = 'Yes';
-    modalBtnNo.textContent = 'No';
-    modal.append(modalWindow);
-    modalWindow.append(modalQuestion);
-    modalWindow.append(modalBtnWrapper);
-    modalBtnWrapper.append(modalBtnYes);
-    modalBtnWrapper.append(modalBtnNo);
-    container.append(modal);
-
-    // modal.addEventListener('click', event => {
-    //     if (event.__withinWindow) return;
-    //     modal.classList.remove('show-modal');
-    //     modal.classList.remove('modal-transition');
-    // });
-
-    // modalWindow.addEventListener('click', event => {
-    //     event.__withinWindow = true;
-    // });
-
     return container;
 };
 
@@ -113,12 +81,9 @@ function createItem(todo) {
         };
     });
 
-    deleteBtn.addEventListener('click', event => {
-        const modal = document.querySelector('.modal');
-        modal.classList.add('show-modal');
-        setTimeout(() => modal.classList.add('modal-transition'), 0);
-        confirmDelete(event.target.parentNode.parentNode)
-        // somehow remove only clicked item
+    deleteBtn.addEventListener('click', () => {
+        setTimeout(() => document.querySelector('.modal').classList.add('modal-transition'), 0);
+        confirmDelete(item)
     });
 
     item.classList.add('todo-item');
@@ -136,18 +101,48 @@ function createItem(todo) {
 };
 
 function confirmDelete(item) {
-    const modal = document.querySelector('.modal');
-    const noBtn = document.querySelector('.modal-btn-no');
-    const yesBtn = document.querySelector('.modal-btn-yes');
+    const container = document.querySelector('.todo-container')
+    const modal = document.createElement('div');
+    const modalWindow = document.createElement('div');
+    const modalQuestion = document.createElement('div');
+    const modalBtnWrapper = document.createElement('div');
+    const modalBtnYes = document.createElement('button');
+    const modalBtnNo = document.createElement('button');
+    modal.classList.add('modal');
+    modalWindow.classList.add('modal-window');
+    modalQuestion.classList.add('modal-question');
+    modalBtnWrapper.classList.add('modal-btn-wrapper');
+    modalBtnYes.classList.add('modal-btn-yes', 'modal-btn');
+    modalBtnNo.classList.add('modal-btn-no', 'modal-btn');
+    modalQuestion.textContent = 'Are you sure?'
+    modalBtnYes.textContent = 'Delete';
+    modalBtnNo.textContent = 'Cancel';
+    modal.append(modalWindow);
+    modalWindow.append(modalQuestion);
+    modalWindow.append(modalBtnWrapper);
+    modalBtnWrapper.append(modalBtnYes);
+    modalBtnWrapper.append(modalBtnNo);
+    container.append(modal);
 
-    noBtn.addEventListener('click', () => {
-        modal.classList.remove('show-modal')
-        modal.classList.remove('modal-transition')
+    modal.addEventListener('click', event => {
+        if (event.__withinWindow) return;
+        modal.classList.remove('modal-transition');
+        modal.remove()
     });
 
-    yesBtn.addEventListener('click', () => {
-        modal.classList.remove('show-modal')
+    modalWindow.addEventListener('click', event => {
+        event.__withinWindow = true;
+    });
+
+    modalBtnNo.addEventListener('click', () => {
+        modal.classList.remove('modal-transition')
+        modal.remove()
+        
+    });
+
+    modalBtnYes.addEventListener('click', () => {
         modal.classList.remove('modal-transition')
         item.remove()
+        modal.remove()
     });
 }
