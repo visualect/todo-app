@@ -1,8 +1,12 @@
 import render from './App.js';
 
+let todos = [];
+
 export function create() {
-    const container = document.createElement('div');
     const params = new URLSearchParams(location.search);
+    const currentUser = params.get('user');
+
+    const container = document.createElement('div');
     const header = document.createElement('header');
     const nav = document.createElement('nav');
     const username = document.createElement('p');
@@ -14,18 +18,34 @@ export function create() {
     const button = document.createElement('button');
     const todoList = document.createElement('ul');
 
+    const savedTodos = JSON.parse(localStorage.getItem(currentUser))
+    if (savedTodos) {
+        todos = savedTodos
+        savedTodos.forEach(itemObj => {
+            const savedItem = createItem(itemObj);
+            todoList.append(savedItem);
+        });
+    };
+
     button.textContent = 'Add';
     input.placeholder = 'What needs to be done?';
     span.textContent = 'To do /';
-    username.textContent = params.get('user');
+    username.textContent = currentUser;
     changeProfileBtn.textContent = 'Change profile';
 
     form.addEventListener('submit', event => {
         event.preventDefault();
         if (!input.value) return;
-        const todoItem = createItem(input.value);
-        input.value = '';
+        const newItem = {
+            name: input.value,
+            done: false,
+        };
+        const todoItem = createItem(newItem);
+        todos.push(newItem);
+        saveTodos(todos)
+        console.log(todos);
         todoList.append(todoItem);
+        input.value = '';
         setTimeout(() => todoItem.classList.add('show-item'), 0);
     });
 
@@ -33,6 +53,7 @@ export function create() {
         event.preventDefault();
         history.pushState(null, null, `${location.pathname}`);
         render('./Users.js');
+        todos = [];
     });
 
     username.classList.add('current-user')
@@ -62,7 +83,7 @@ export function create() {
 };
 
 
-function createItem(todo) {
+function createItem(itemObj) {
     const item = document.createElement('li');
     const itemText = document.createElement('div');
     const buttonWrapper = document.createElement('div');
@@ -71,19 +92,23 @@ function createItem(todo) {
 
     doneBtn.textContent = 'Done';
     deleteBtn.textContent = 'Delete';
-    itemText.textContent = todo;
+    itemText.textContent = itemObj.name;
+    if (itemObj.done) item.classList.add('done-state')
 
     doneBtn.addEventListener('click', () => {
-        if (!item.classList.contains('done-state')) {
-            item.classList.add('done-state');
-        } else {
-            item.classList.remove('done-state')
-        };
+        item.classList.toggle('done-state');
+        todos.forEach(itemObj => {
+            if (itemObj.name === item.children[0].textContent) {
+                itemObj.done = !itemObj.done;
+            };
+        });
+        console.log(todos);
+        saveTodos(todos)
     });
 
     deleteBtn.addEventListener('click', () => {
         setTimeout(() => document.querySelector('.modal').classList.add('modal-transition'), 0);
-        confirmDelete(item)
+        confirmDelete(item);
     });
 
     item.classList.add('todo-item');
@@ -135,14 +160,26 @@ function confirmDelete(item) {
     });
 
     modalBtnNo.addEventListener('click', () => {
-        modal.classList.remove('modal-transition')
-        modal.remove()
-        
+        modal.classList.remove('modal-transition');
+        modal.remove();
     });
 
     modalBtnYes.addEventListener('click', () => {
         modal.classList.remove('modal-transition')
-        item.remove()
-        modal.remove()
+        item.remove();
+        todos.forEach(itemObj => {
+            if (itemObj.name === item.children[0].textContent) {
+                todos.splice(todos.indexOf(itemObj), 1);
+            };
+        });
+        modal.remove();
+        console.log(todos);
+        saveTodos(todos)
     });
-}
+};
+
+function saveTodos(arr) {
+    const params = new URLSearchParams(location.search);
+    const currentUser = params.get('user');
+    localStorage.setItem(currentUser, JSON.stringify(arr));
+};
