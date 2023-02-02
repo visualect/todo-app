@@ -43,7 +43,6 @@ export function create() {
         const todoItem = createItem(newItem);
         todos.push(newItem);
         saveTodos(todos)
-        console.log(todos);
         todoList.append(todoItem);
         input.value = '';
     });
@@ -101,7 +100,6 @@ function createItem(itemObj) {
                 itemObj.done = !itemObj.done;
             };
         });
-        console.log(todos);
         saveTodos(todos)
     });
 
@@ -172,7 +170,6 @@ function confirmDelete(item) {
             };
         });
         modal.remove();
-        console.log(todos);
         saveTodos(todos)
     });
 };
