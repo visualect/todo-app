@@ -174,7 +174,6 @@ function confirmDelete(item) {
 };
 
 function saveTodos(arr) {
-    const params = new URLSearchParams(location.search);
-    const currentUser = params.get('user');
+    const currentUser = location.pathname.slice(1);
     localStorage.setItem(currentUser, JSON.stringify(arr));
 };
