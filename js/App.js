@@ -1,6 +1,6 @@
 const root = document.getElementById('root');
 const params = new URLSearchParams(location.search);
-const currentUser = params.get('user');
+const currentUser = location.pathname.slice(1);
 
 export default function render(js) {
     return import(js).then(jsModule => {
@@ -17,8 +17,7 @@ if (currentUser) {
 }
 
 window.addEventListener('popstate', () => {
-    const params = new URLSearchParams(location.search);
-    const currentUser = params.get('user');
+    currentUser = location.pathname.slice(1);
     if (currentUser) {
         render('./Todo.js');
     } else {

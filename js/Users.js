@@ -11,7 +11,7 @@ export function create() {
         const userLink = document.createElement('a');
         userLink.classList.add('users__link');
         userLink.textContent = user;
-        userLink.href = `?user=${user}`
+        userLink.href = `/${user}`
         userItem.append(userLink);
         usersList.append(userItem)
         userLink.addEventListener('click', event => {
@@ -23,6 +23,6 @@ export function create() {
     container.classList.add('users-container');
     usersList.classList.add('users');
     container.append(usersList);
-    
+
     return container;
 };

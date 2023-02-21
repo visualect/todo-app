@@ -3,8 +3,7 @@ import render from './App.js';
 let todos = [];
 
 export function create() {
-    const params = new URLSearchParams(location.search);
-    const currentUser = params.get('user');
+    const currentUser = location.pathname.slice(1);
 
     const container = document.createElement('div');
     const header = document.createElement('header');
@@ -49,7 +48,7 @@ export function create() {
 
     changeProfileBtn.addEventListener('click', event => {
         event.preventDefault();
-        history.pushState(null, null, `${location.pathname}`);
+        history.pushState(null, null, `${location.origin}`);
         render('./Users.js');
         todos = [];
     });
